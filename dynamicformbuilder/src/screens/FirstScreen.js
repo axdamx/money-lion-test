@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Switch, TextInput, View} from 'react-native';
+import {Alert, StyleSheet, Switch, TextInput, View} from 'react-native';
 import AppButton from '../components/AppButton';
 import AppPicker from '../components/AppPicker';
 import AppScreen from '../components/AppScreen';
@@ -7,7 +7,7 @@ import AppText from '../components/AppText';
 import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
 
-export default function FirstScreen() {
+export default function FirstScreen({navigation}) {
   const [item, setItem] = useState('');
   const [formName, setFormName] = useState('');
   //   const [isNew, setIsNew] = useState(false);
@@ -17,6 +17,15 @@ export default function FirstScreen() {
     {label: 'Boolean', value: 3},
     {label: 'CheckBox', value: 4},
   ];
+
+  const onBtnPress = () => {
+    if (item === '' || formName === '') {
+      Alert.alert('Its Empty!');
+    } else {
+      console.log({item, formName});
+      navigation.navigate('Second');
+    }
+  };
 
   return (
     <AppScreen style={styles.screen}>
@@ -32,7 +41,7 @@ export default function FirstScreen() {
         items={categories}
         onSelectItem={(itemValue) => setItem(itemValue)}
       />
-      <AppButton title="Next" onPress={() => console.log({formName, item})} />
+      <AppButton title="Next" onPress={onBtnPress} />
       {/* <Switch value={isNew} onValueChange={(newValue) => setIsNew(newValue)} /> */}
     </AppScreen>
   );

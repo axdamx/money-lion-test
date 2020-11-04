@@ -1,17 +1,16 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import FirstScreen from './src/screens/FirstScreen';
 import Icon from 'react-native-vector-icons/AntDesign';
+import {NavigationContainer} from '@react-navigation/native';
+import navigationTheme from './src/navigation/navigationTheme';
+import AppNavigator from './src/navigation/AppNavigator';
 
 Icon.loadFont();
 
 export default function App() {
-  return <FirstScreen />;
+  return (
+    <NavigationContainer theme={navigationTheme}>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 }
