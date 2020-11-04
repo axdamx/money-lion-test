@@ -8,7 +8,7 @@ import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
 
 export default function FirstScreen({navigation}) {
-  const [item, setItem] = useState('');
+  const [type, setType] = useState('');
   const [formName, setFormName] = useState('');
   //   const [isNew, setIsNew] = useState(false);
   const categories = [
@@ -19,11 +19,11 @@ export default function FirstScreen({navigation}) {
   ];
 
   const onBtnPress = () => {
-    if (item === '' || formName === '') {
+    if (type === '' || formName === '') {
       Alert.alert('Its Empty!');
     } else {
-      console.log({item, formName});
-      navigation.navigate('Second');
+      console.log({type, formName});
+      navigation.navigate('Second', {type, formName});
     }
   };
 
@@ -36,10 +36,10 @@ export default function FirstScreen({navigation}) {
       />
       <AppText style={styles.text}> Type </AppText>
       <AppPicker
-        selectedItem={item}
+        selectedItem={type}
         placeholder="Choose your type!"
-        items={categories}
-        onSelectItem={(itemValue) => setItem(itemValue)}
+        types={categories}
+        onSelectItem={(typeValue) => setType(typeValue)}
       />
       <AppButton title="Next" onPress={onBtnPress} />
       {/* <Switch value={isNew} onValueChange={(newValue) => setIsNew(newValue)} /> */}

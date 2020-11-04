@@ -16,7 +16,7 @@ import PickerItem from './PickerItem';
 function AppPicker({
   icon,
   placeholder,
-  items,
+  types,
   selectedItem,
   onSelectItem,
   width = '100%',
@@ -46,7 +46,7 @@ function AppPicker({
         <AppScreen>
           <Button title="close" onPress={() => setIsVisible(false)} />
           <FlatList
-            data={items}
+            data={types}
             numColumns={numberOfColumns}
             keyExtractor={(item) => item.value.toString()}
             renderItem={({item}) => (
