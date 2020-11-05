@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
-import {
-  Alert,
-  StyleSheet,
-  ScrollView,
-  TextInput,
-  View,
-  Button,
-} from 'react-native';
+import {Alert, StyleSheet, ScrollView, View, Button} from 'react-native';
+
 import AppButton from '../components/AppButton';
 import AppPicker from '../components/AppPicker';
 import AppScreen from '../components/AppScreen';
@@ -40,15 +34,15 @@ export default function FirstScreen({navigation}) {
       Alert.alert('Its Empty!');
     } else {
       setCustomField([...customField, {fieldName, type, arrayCheckbox}]);
+      Alert.alert('Successfully Added!');
       setArrayCheckbox([]);
     }
   };
 
   const addCheckBoxOption = () => {
     var arr1 = arrayCheckbox;
-    var arr2 = {name: checkboxOption, value: checkboxOption};
+    var arr2 = {name: checkboxOption, value: checkboxOption, checked: false};
     var newData = [...arr1, arr2];
-    console.log(newData);
     setArrayCheckbox(newData);
   };
 
@@ -69,37 +63,45 @@ export default function FirstScreen({navigation}) {
   return (
     <ScrollView>
       <AppScreen style={styles.screen}>
-        <AppText style={styles.text}> Form Name </AppText>
+        <View style={styles.formClearBtn}>
+          <AppText style={styles.text}> Form Name </AppText>
+          <AppButton title="Clear" onPress={clearBtn} width="50%" />
+        </View>
         <AppTextInput
+          autoCorrect={false}
           placeholder={'Enter Form Name'}
           onChangeText={(text) => setFieldName(text)}
         />
         <AppText style={styles.text}> Type </AppText>
         <AppPicker
           selectedItem={type}
-          placeholder="Choose your type!"
+          placeholder="Choose your type"
           types={categories}
           onSelectItem={(typeValue) => setType(typeValue)}
         />
         {type.label === 'CheckBox' && (
-          <AppScreen style={styles.screen}>
-            {arrayCheckbox.map((val, key) => {
-              return <AppText key={key}>{val.name}</AppText>;
-            })}
+          <AppScreen style={styles.checkboxScreen}>
             <AppText style={styles.text}> Enter Check Box Options </AppText>
+            {arrayCheckbox.map((val, key) => {
+              return (
+                <AppText style={styles.checkboxText} key={key}>
+                  - {val.name}
+                </AppText>
+              );
+            })}
             <AppTextInput
-              placeholder={'Enter Form Name'}
+              placeholder={'Enter checkbox options'}
               onChangeText={(text) => setCheckboxOption(text)}
             />
-            <AppButton title="Add Options" onPress={addCheckBoxOption} />
+            <View style={styles.centerView}>
+              <AppButton title="Add Options" onPress={addCheckBoxOption} />
+            </View>
           </AppScreen>
         )}
-        <AppButton title="Add" onPress={addCustomField} />
-        <AppButton title="Clear" onPress={clearBtn} />
-
-        {/* <Switch value={isNew} onValueChange={(newValue) => setIsNew(newValue)} /> */}
+        <View style={styles.centerView}>
+          <AppButton title="Add" onPress={addCustomField} color="secondary" />
+        </View>
         <AppText style={styles.summaryText}> Your Form Summary </AppText>
-
         {customField.map((val, key) => {
           return (
             <View style={styles.customField} key={key}>
@@ -109,8 +111,10 @@ export default function FirstScreen({navigation}) {
             </View>
           );
         })}
-        <AppButton title="Next" onPress={onBtnPress} />
       </AppScreen>
+      <View style={styles.centerView}>
+        <AppButton title="Next" onPress={onBtnPress} color="secondary" />
+      </View>
     </ScrollView>
   );
 }
@@ -120,9 +124,29 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: colors.light,
   },
-  text: {
+  centerView: {
+    alignItems: 'center',
+  },
+  formClearBtn: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  checkboxScreen: {
     padding: 10,
+    backgroundColor: colors.light,
+    borderRadius: 5,
+    borderWidth: 1,
+    justifyContent: 'center',
+  },
+  text: {
+    padding: 5,
     textDecorationLine: 'underline',
+    marginTop: 10,
+    color: colors.primary,
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  checkboxText: {
     marginTop: 10,
     color: colors.primary,
     fontWeight: 'bold',
