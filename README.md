@@ -3,5 +3,5 @@ money-lion-test
 
 How to Run
 
-npm install
+npm install and 
 npx react-native run-ios
