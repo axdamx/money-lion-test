@@ -6,11 +6,13 @@ import colors from '../config/colors';
 import AppCheckBox from '../components/AppCheckbox';
 import AppTextInput from '../components/AppTextInput';
 import AppSwitch from '../components/AppSwitch';
+import {useSelector} from 'react-redux';
 
-export default function SecondScreen({route}) {
-  const data = route.params;
+export default function SecondScreen() {
   const [isCheck, setIsCheck] = useState(false);
   const [isNew, setIsNew] = useState(false);
+  const customField = useSelector((state) => state.formReducer.customField);
+
   const handleCheckBox = (val) => {
     val.checked = !val.checked;
     setIsCheck(!isCheck);
@@ -19,7 +21,7 @@ export default function SecondScreen({route}) {
   return (
     <ScrollView>
       <AppScreen style={styles.screen}>
-        {data.map((val, key) => {
+        {customField.map((val, key) => {
           return (
             <View style={styles.listView} key={key}>
               <AppText style={styles.text}>Field Name: {val.fieldName}</AppText>
@@ -43,7 +45,6 @@ export default function SecondScreen({route}) {
                   <AppTextInput
                     placeholder={'Enter Number'}
                     keyboardType="number-pad"
-                    // onChangeText={(text) => setFieldName(text)}
                   />
                 </View>
               )}
@@ -57,10 +58,7 @@ export default function SecondScreen({route}) {
               )}
               {val.type.label === 'Text' && (
                 <View>
-                  <AppTextInput
-                    placeholder={'Enter Text'}
-                    // onChangeText={(text) => setFieldName(text)}
-                  />
+                  <AppTextInput placeholder={'Enter Text'} />
                 </View>
               )}
             </View>

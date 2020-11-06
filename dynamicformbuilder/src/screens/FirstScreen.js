@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Alert, StyleSheet, ScrollView, View, Button} from 'react-native';
+import {
+  Alert,
+  StyleSheet,
+  ScrollView,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import AppButton from '../components/AppButton';
 import AppPicker from '../components/AppPicker';
@@ -7,11 +15,15 @@ import AppScreen from '../components/AppScreen';
 import AppText from '../components/AppText';
 import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
+import {
+  addCustomField,
+  removeCustomField,
+  clearCustomField,
+} from '../redux/form';
 
 export default function FirstScreen({navigation}) {
   const [type, setType] = useState('');
   const [fieldName, setFieldName] = useState('');
-  const [customField, setCustomField] = useState([]);
   const [checkboxOption, setCheckboxOption] = useState('');
   const [arrayCheckbox, setArrayCheckbox] = useState([]);
   const categories = [
@@ -20,20 +32,22 @@ export default function FirstScreen({navigation}) {
     {label: 'Boolean', id: 3},
     {label: 'CheckBox', id: 4},
   ];
+  const dispatch = useDispatch();
+  const customField = useSelector((state) => state.formReducer.customField);
 
   const onBtnPress = () => {
     if (type === '' || fieldName === '') {
       Alert.alert('Its Empty!');
     } else {
-      navigation.navigate('Second', customField);
+      navigation.navigate('Second');
     }
   };
 
-  const addCustomField = () => {
+  const addCustomFieldBtn = () => {
     if (type === '' || fieldName === '') {
       Alert.alert('Its Empty!');
     } else {
-      setCustomField([...customField, {fieldName, type, arrayCheckbox}]);
+      dispatch(addCustomField({fieldName, type, arrayCheckbox}));
       Alert.alert('Successfully Added!');
       setArrayCheckbox([]);
     }
@@ -47,17 +61,21 @@ export default function FirstScreen({navigation}) {
   };
 
   const removeField = (val) => {
-    const newArray = customField.filter((element) => {
-      return element.fieldName !== val.fieldName;
+    dispatch(removeCustomField(val.fieldName));
+  };
+
+  const removeCheckBoxOptions = (val) => {
+    const newArray = arrayCheckbox.filter((element) => {
+      return element.name !== val.name;
     });
-    setCustomField(newArray);
+    setArrayCheckbox(newArray);
   };
 
   const clearBtn = () => {
     setType('');
     setFieldName('');
-    setCustomField([]);
     setArrayCheckbox([]);
+    dispatch(clearCustomField());
   };
 
   return (
@@ -78,15 +96,26 @@ export default function FirstScreen({navigation}) {
           placeholder="Choose your type"
           types={categories}
           onSelectItem={(typeValue) => setType(typeValue)}
+          icon="chevron-right"
         />
         {type.label === 'CheckBox' && (
           <AppScreen style={styles.checkboxScreen}>
             <AppText style={styles.text}> Enter Check Box Options </AppText>
             {arrayCheckbox.map((val, key) => {
               return (
-                <AppText style={styles.checkboxText} key={key}>
-                  - {val.name}
-                </AppText>
+                <View style={styles.customField} key={key}>
+                  <View>
+                    <AppText style={styles.checkboxText}>- {val.name}</AppText>
+                  </View>
+                  <View>
+                    <TouchableWithoutFeedback
+                      onPress={() => removeCheckBoxOptions(val)}>
+                      <View style={styles.closeBtn}>
+                        <Icon name="clear" size={35} color={colors.primary} />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </View>
               );
             })}
             <AppTextInput
@@ -99,15 +128,28 @@ export default function FirstScreen({navigation}) {
           </AppScreen>
         )}
         <View style={styles.centerView}>
-          <AppButton title="Add" onPress={addCustomField} color="secondary" />
+          <AppButton
+            title="Add"
+            onPress={addCustomFieldBtn}
+            color="secondary"
+          />
         </View>
         <AppText style={styles.summaryText}> Your Form Summary </AppText>
         {customField.map((val, key) => {
           return (
             <View style={styles.customField} key={key}>
-              <AppText>FieldName: {val.fieldName}</AppText>
-              <AppText>FieldType: {val.type.label}</AppText>
-              <Button title="Remove" onPress={() => removeField(val)} />
+              <View>
+                <AppText>FieldName: {val.fieldName}</AppText>
+                <AppText>FieldType: {val.type.label}</AppText>
+              </View>
+              <View>
+                <TouchableWithoutFeedback onPress={() => removeField(val)}>
+                  <View style={styles.closeBtn}>
+                    <Icon name="clear" size={35} color={colors.primary} />
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+              {/* <Button title="Remove" onPress={() => removeField(val)} /> */}
             </View>
           );
         })}
@@ -157,8 +199,10 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   customField: {
-    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     backgroundColor: colors.mediumGray,
+    padding: 10,
   },
   summaryText: {
     padding: 10,
@@ -169,5 +213,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 20,
     textAlign: 'center',
+  },
+  closeBtn: {
+    alignItems: 'flex-end',
+    marginRight: 10,
   },
 });

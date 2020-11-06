@@ -6,8 +6,9 @@ import {
   Modal,
   Button,
   FlatList,
+  TouchableHighlight,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import colors from '../config/colors';
 import AppText from './AppText';
 import AppScreen from './AppScreen';
@@ -39,12 +40,16 @@ function AppPicker({
           <AppText style={styles.text}>
             {selectedItem ? selectedItem.label : placeholder}
           </AppText>
-          <Icon name="caretdown" size={15} color={colors.medium} />
+          <Icon name="arrow-drop-down" size={25} color={colors.medium} />
         </View>
       </TouchableWithoutFeedback>
       <Modal visible={isVisible} animationType="slide">
         <AppScreen>
-          <Button title="close" onPress={() => setIsVisible(false)} />
+          <TouchableWithoutFeedback onPress={() => setIsVisible(false)}>
+            <View style={styles.closeBtn}>
+              <Icon name="clear" size={35} color={colors.primary} />
+            </View>
+          </TouchableWithoutFeedback>
           <FlatList
             data={types}
             numColumns={numberOfColumns}
@@ -84,6 +89,7 @@ const styles = StyleSheet.create({
     color: colors.medium,
     flex: 1,
   },
+  closeBtn: {alignItems: 'flex-end', marginRight: 10},
 });
 
 export default AppPicker;

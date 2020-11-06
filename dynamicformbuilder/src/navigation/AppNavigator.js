@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import FormNavigator from './FormNavigator';
 
 const Tab = createBottomTabNavigator();
@@ -8,7 +8,7 @@ const Tab = createBottomTabNavigator();
 const AppNavigator = () => (
   <Tab.Navigator>
     <Tab.Screen
-      name="Form"
+      name="Home"
       component={FormNavigator}
       options={{
         tabBarIcon: ({color, size}) => (
