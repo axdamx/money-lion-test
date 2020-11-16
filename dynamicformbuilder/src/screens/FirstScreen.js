@@ -89,6 +89,7 @@ export default function FirstScreen({navigation}) {
           autoCorrect={false}
           placeholder={'Enter Form Name'}
           onChangeText={(text) => setFieldName(text)}
+          value={fieldName}
         />
         <AppText style={styles.text}> Type </AppText>
         <AppPicker
